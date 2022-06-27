@@ -94,7 +94,10 @@ Once running it should look something like this:
 
 ![Burp Suite](/assets/images/burp-suite.png)
 >Note: For your convenience, a video titled Burp Suite.mp4, walking through the attack itself is provided in the GitHub folder. Feel free to have that open and running as you perform steps 3 and 4.
-![Burp Suite Video](/assets/video/Burp%20Suite.mp4)
+>
+https://user-images.githubusercontent.com/15679125/175849148-f5331727-52fa-474c-a5ea-59ba91c5a683.mp4
+
+
 
 ## Step 3: Perform SQL Injection attack on OWASP Juice Shop and Login as Admin
 
