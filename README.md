@@ -51,6 +51,10 @@ Open your shell or command line interface. From here we will use Docker to get t
   <source src=(/assets/) type="video/mp4">
 </video>
 
+https://user-images.githubusercontent.com/15679125/175845793-35ef4c95-3ef5-4abf-93a5-fc542ea61aa1.mp4
+
+
+
 From your command line, enter the following commands:
 >`docker pull bkimminich/juice-shop`
 (this pulls the Docker image into our local environment)
