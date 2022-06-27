@@ -45,11 +45,8 @@ Open your shell or command line interface. From here we will use Docker to get t
 
 
 
-**Note:** There is a companion video located in the GitHub folder called Docker.mp4. It may be handy to have this open while performing this step.
-
-<video width="320" height="240" controls>
-  <source src=(/assets/) type="video/mp4">
-</video>
+**Note:** There is a companion video located in the GitHub directory assets/videos/Docker.mp4. It may be handy to have this open while performing this step.
+It is also here:
 
 https://user-images.githubusercontent.com/15679125/175845793-35ef4c95-3ef5-4abf-93a5-fc542ea61aa1.mp4
 
@@ -93,7 +90,7 @@ On the next screen leave *Use Burp defaults* and hit **Start Burp**.
 Once running it should look something like this:
 
 ![Burp Suite](/assets/images/burp-suite.png)
->Note: For your convenience, a video titled Burp Suite.mp4, walking through the attack itself is provided in the GitHub folder. Feel free to have that open and running as you perform steps 3 and 4.
+>Note: For your convenience, a video located in assets/videos/Burp Suite.mp4, walking through the attack itself is provided in the GitHub folder. Feel free to have that open and running as you perform steps 3 and 4.
 >
 https://user-images.githubusercontent.com/15679125/175849148-f5331727-52fa-474c-a5ea-59ba91c5a683.mp4
 
