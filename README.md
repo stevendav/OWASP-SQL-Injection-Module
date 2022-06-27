@@ -139,6 +139,34 @@ You may be wondering why this worked? In short, it worked because:
 
 ## Step 4: Perform SQL Injection attack on OWASP Juice Shop and Login as user Bender
 
+We’re going to repeat most of step 3 here with one exception. This time, we know the user name of the account we’re trying to log in as.
+
+In the OWASP Juice Shop click on the Account menu and select Logout from the drop down.
+
+Go back to the Account menu, select LogIn and enter bender@juice-sh.op as the username and lowercase “a” for the password.
+
+As before, do not press the Login button just yet.
+
+Go back to Burp Suite and start intercepting by clicking the Intercept is off button.
+
+Now press the Login button in the OWASP Juice Shop.
+
+Notice what happens in Burp Suite.
+
+This time change the email to: bender@juice-sh.op'-- and press the Forward button. Again, we only needed to intercept that one entry, go ahead and turn intercept off by clicking on the Intercept is on button.
+
+Question: What is the last bit of code or text starting at line 20 in Burp Suite, now that we made our edit?
+Answer:  {“email”: “bender@juice-sh.op'-- ”, “password”:”a”}
+
+
+Notice what happens in the OWASP Juice Shop.
+
+
+Congratulations! You are now logged in as the Bender account on the OWASP Juice Shop!
+
+You might be wondering why we didn’t need to use 1=1 in this case? Since we knew the account username already, we knew it would be true, so no need to create another true statement. All we needed to do was add the -- to comment out the rest of the login process.
+
+
 
 
 
