@@ -116,9 +116,9 @@ Back in Burp Suite turn intercept on by clicking the button that says ***Interce
 
 Now in the OWASP Juice Shop click the **Login** button and notice what happens in the Burp Suite window.
 
->Question: What is the last bit of code or text starting at line 20 in Burp Suite?
+>**Question1:** What is the last bit of code or text starting at line 20 in Burp Suite?
 
->Answer:
+>**Answer:**(answers are at bottom of this document)
 
 In the Burp Suite window find where the email and the two _a_'s you entered is.
 
@@ -126,8 +126,8 @@ Change the “a” next to email with: `‘or 1=1--` and press the **Forward** b
 
 Notice the OWASP Juice Shop’s response
 
->Question: What is the email address of the Admin account on the OWASP Juice Shop?
-Answer:
+>**Question 2:** What is the email address of the Admin account on the OWASP Juice Shop?
+>**Answer:** (answers at bottom of this document)
 
 **Congratulations!** You are now logged in as the Admin account on the OWASP Juice Shop!
 
@@ -155,9 +155,9 @@ Notice what happens in Burp Suite.
 
 This time change the email to: bender@juice-sh.op'-- and press the Forward button. Again, we only needed to intercept that one entry, go ahead and turn intercept off by clicking on the ***Intercept is on*** button.
 
-Question: What is the last bit of code or text starting at line 20 in Burp Suite, now that we made our edit?
+>****Question 3:** What is the last bit of code or text starting at line 20 in Burp Suite, now that we made our edit?
 
-Answer:
+>**Answer:** (answers are at the bottom of this document)
 
 
 Notice what happens in the OWASP Juice Shop.
@@ -168,6 +168,7 @@ Congratulations! You are now logged in as the Bender account on the OWASP Juice 
 You might be wondering why we didn’t need to use 1=1 in this case? Since we knew the username already, we knew it would be true, so no need to create another true statement. All we needed to do was add the -- to comment out the rest of the login process.
 
 # BONUS Step - Use Datadog to Block and Monitor SQL Attacks
+In this step you'll build a custom Docker container with the OWASP Juice Shop that also the Datadog agent baked in and configured to monitor application security.
 
 ## Step 1. Pull Files 
 From the Github repository, pull down the follwing files:
@@ -216,27 +217,36 @@ With your secrets file complete, rename the file to `.env`
 
 This will pass your unique "secrets" to the Docker container during the build process.
 
-# Step 3. Build the OWASP Juice Shop container with running Datadog agent
+## Step 3. Build the OWASP Juice Shop container with running Datadog agent
 
 From the CLI enter the following commands:
 
 >`docker build . -f Dockerfile.datadog -t stevedav/juice-shop:latest`
 
 >`docker-compose -f docker-compose.datadog up`
-(Note: this can take several minutes)
 
-# Step 4. Run SQL Attack on Juice Shop running Datadog agent
+(Note: Make sure you're in the directory with the files you pulled from Github. Also, this part can take several minutes)
+
+## Step 4. Run SQL Attack on Juice Shop running Datadog agent
 
 Follow the instructions from Step 3, but this time browse to `http://loaclhost:8081`
 
 Notice this time the only response in the OWASP Juice Shop has to do with Error Handling. You are not logged in as admin.
 
 # Step 5. See results in Datadog
-Now go to your DataDog portal. Browse to the **Security** menu and select **Application Security**
+Now go to your Datadog portal. Browse to the **Security** menu and select **Application Security**
 
-![APPSEC](/assets/images/APP-SEC-TRACES.png)
+![APPSEC](/assets/images/DD-ASM-HOME.png)
 
-## Conclusion
+From the **Home** tab you'll notice the Top Attacks Attempted. There should be only one and it is SQL Injection.
+
+Browse to the **Traces** tab where you can see the details of the attack
+
+![APPSEC-TRACE](/assets/images/APP-SEC-TRACES.png)
+
+In this instance Datadog prevented the attack and gives you great visibility into what happend, when it happend and where the attack came from.
+
+# Conclusion
 
 SQL injection is one of the most common attacks performed by bad actors on today’s web applications. Having completed this module, you now have first hand knowledge and awareness of this attack.
 
@@ -247,3 +257,7 @@ How does one prevent such attacks? Several options are available including:
 - Use LIMIT or other SQL controls with a query to prevent disclosure of mass records in cass of SQL injection
 
 
+## ANSWERS
+1. {“email”: “a”, “password”:”a”}
+2. admin@juice-sh.op
+3. {“email”: “bender@juice-sh.op'-- ”, “password”:”a”}
