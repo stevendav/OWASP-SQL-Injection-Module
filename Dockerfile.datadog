@@ -1,0 +1,6 @@
+FROM bkimminich/juice-shop:latest-amd64
+RUN npm install dd-trace
+RUN npm uninstall sqlite3
+RUN npm install --save sqlite3
+
+CMD ["npm", "start"]
