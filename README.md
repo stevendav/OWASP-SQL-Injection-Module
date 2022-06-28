@@ -36,7 +36,7 @@ The ideal learner is  familiar with the command line interface (CLI).  Docker ba
 3. Docker
 4. Burp Suite community edition
 5. OWASP JuiceShop Website (which we will retrieve in and install via Docker)
-6. DataDog account (sign up for a free trial  [here](https://www.datadoghq.com))
+6. Datadog account (sign up for a free trial  [here](https://www.datadoghq.com))
 7. Something to take notes with
 8. A curious mind!
 ***
@@ -120,7 +120,7 @@ Now in the OWASP Juice Shop click the **Login** button and notice what happens i
 
 >Answer:
 
-In the Burp Suite window find where the email and the two _a_'s you entered are.
+In the Burp Suite window find where the email and the two _a_'s you entered is.
 
 Change the “a” next to email with: `‘or 1=1--` and press the **Forward** button above to forward onto the server. Since we only needed to intercept that one entry, go ahead and turn intercept off by clicking on the ***Intercept is on*** button.
 
@@ -141,22 +141,23 @@ You may be wondering why this worked? In short, it worked because:
 
 We’re going to repeat most of step 3 here with one exception. This time, we know the user name of the account we’re trying to log in as.
 
-In the OWASP Juice Shop click on the Account menu and select Logout from the drop down.
+In the OWASP Juice Shop click on the Account menu and select **Logout** from the drop down.
 
-Go back to the Account menu, select LogIn and enter bender@juice-sh.op as the username and lowercase “a” for the password.
+Go back to the Account menu, select **LogIn** and enter `bender@juice-sh.op` as the username and lowercase `a` for the password.
 
-As before, do not press the Login button just yet.
+As before, do not press the **Login** button just yet.
 
-Go back to Burp Suite and start intercepting by clicking the Intercept is off button.
+Go back to Burp Suite and start intercepting by clicking the ***Intercept is off*** button.
 
-Now press the Login button in the OWASP Juice Shop.
+Now press the **Login** button in the OWASP Juice Shop.
 
 Notice what happens in Burp Suite.
 
-This time change the email to: bender@juice-sh.op'-- and press the Forward button. Again, we only needed to intercept that one entry, go ahead and turn intercept off by clicking on the Intercept is on button.
+This time change the email to: bender@juice-sh.op'-- and press the Forward button. Again, we only needed to intercept that one entry, go ahead and turn intercept off by clicking on the ***Intercept is on*** button.
 
 Question: What is the last bit of code or text starting at line 20 in Burp Suite, now that we made our edit?
-Answer:  {“email”: “bender@juice-sh.op'-- ”, “password”:”a”}
+
+Answer:
 
 
 Notice what happens in the OWASP Juice Shop.
@@ -164,10 +165,85 @@ Notice what happens in the OWASP Juice Shop.
 
 Congratulations! You are now logged in as the Bender account on the OWASP Juice Shop!
 
-You might be wondering why we didn’t need to use 1=1 in this case? Since we knew the account username already, we knew it would be true, so no need to create another true statement. All we needed to do was add the -- to comment out the rest of the login process.
+You might be wondering why we didn’t need to use 1=1 in this case? Since we knew the username already, we knew it would be true, so no need to create another true statement. All we needed to do was add the -- to comment out the rest of the login process.
 
+# BONUS Step - Use Datadog to Block and Monitor SQL Attacks
 
+## Step 1. Pull Files 
+From the Github repository, pull down the follwing files:
+1. Dockerfile.datadog
+2. docker-compose.datadog
+3. Secrets
 
+## Step 2. Get "secrets" from Datadog account
+For this step we're going to need four secrets from your Datadog account. They are:
+1. API Key
+2. APP Key
+3. RUM Application ID
+4. RUM Application Token
 
+The API and APP keys are in the Organizational Settings. Using the search is a quick way to find them.
+
+Click the **Go To...** link on the left navigation bar and search for API.
+
+![DD-API](/assets/images/SEARCH-API.png)
+
+Clicking on the API Keys (first in the search result) will take you right to that key in the Organizational Settings.
+![DD-ORG](/assets/images/Organizational%20Setting.png)
+
+Clicking on the Key itself will bring up a window where you can easily copy the API Key. Copy this key now, then open the Secrets file provided and paste it next to the `DD_API_KEY=`
+
+Do the same for the APP Key only paste it's key next to 
+`DD_APP_KEY=`
+
+To get the RUM Application ID go to the **UX Monitoring** menu and select RUM Applications
+
+![RUM-APPS](/assets/images/RUM-APP-MENU.png)
+
+This will open the Real User Monitoring window. From here create a new application
+
+Select JS as the application type and name the application **juice-shop**.
+
+Select NPM as the instrumentation type and name your service **juice-shop**
+![RUM](/assets/images/RUM-APPID-TOKEN.png)
+
+Copy both the APP ID and the Token and paste into the Secrets file.
+>`DD_RUM_APPLICATION_ID=`
+
+>`DD_RUM_APPLICATION_TOKEN=`
+
+With your secrets file complete, rename the file to `.env`
+
+This will pass your unique "secrets" to the Docker container during the build process.
+
+# Step 3. Build the OWASP Juice Shop container with running Datadog agent
+
+From the CLI enter the following commands:
+
+>`docker build . -f Dockerfile.datadog -t stevedav/juice-shop:latest`
+
+>`docker-compose -f docker-compose.datadog up`
+(Note: this can take several minutes)
+
+# Step 4. Run SQL Attack on Juice Shop running Datadog agent
+
+Follow the instructions from Step 3, but this time browse to `http://loaclhost:8081`
+
+Notice this time the only response in the OWASP Juice Shop has to do with Error Handling. You are not logged in as admin.
+
+# Step 5. See results in Datadog
+Now go to your DataDog portal. Browse to the **Security** menu and select **Application Security**
+
+![APPSEC](/assets/images/APP-SEC-TRACES.png)
+
+## Conclusion
+
+SQL injection is one of the most common attacks performed by bad actors on today’s web applications. Having completed this module, you now have first hand knowledge and awareness of this attack.
+
+How does one prevent such attacks? Several options are available including:
+- Using a safe API which avoids interpretation
+- Using positive server side validation
+- Escaping special characters using appropriate syntax for your interpreter
+- Use LIMIT or other SQL controls with a query to prevent disclosure of mass records in cass of SQL injection
 
 
