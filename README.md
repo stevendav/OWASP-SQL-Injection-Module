@@ -1,7 +1,32 @@
 # SQL Injection Attack Module
-A short module on SQL Injection Attacks with exercises on the OWASP Juice Shop and remediation and observation with DataDog agent.
+This is a brief module on SQL Injection Attacks with exercises on the OWASP Juice Shop and remediation and observation with the Datadog agent.
 
-## Introduction
+## Module Overview
+In this module you will learn what a SQL injection is, how to perform one and what the results can be. You'll also see how DataDog's agent can prevent and alert you of such an attack.
+
+This module is intended for an IT professional, with a curiosity about AppSec. Your role might be Developer, SRE, QA, or Engineer. 
+
+First, we will open Docker and install a common vulnerability website for us to hack called the OWASP Juice Shop. Next, we will perform an SQL injection on the OWASP Juice Shop using a well known tool called Burp Suite. Next, we will look at the results of our injection, the consequences. Finally, we'll build a Docker container with the OWASP Juice shop plus the DataDog agent installed to see how this tool can prevent and give visibility into the attack.
+
+For brevity this module does not include installing or using Docker, use of a Command Line Interface, Datadog or Burp Suite. Links to resources on Docker, Dartadog and Burp Suite are provided for your own learning outside the module. Docker is required to complete this module.
+
+## Assumptions
+The ideal learner is familiar with the command line interface (CLI).  Docker basics are required to run the scenario.  If you do not have experience with Docker, here are a few links on installing Docker and a quick how-to on how to get Docker up and running.
+
+* [Get Docker](https://docs.Docker.com/get-Docker/)
+* [Getting started with Docker](https://docs.Docker.com/get-started/)
+
+## Required Tools
+1. Access to a Shell or Command Line Interface
+2. Firefox or web browser of choice
+3. Docker
+4. Burp Suite community edition
+5. OWASP JuiceShop Website (which we will retrieve in and install via Docker)
+6. Datadog account (sign up for a free trial  [here](https://www.datadoghq.com))
+7. Something to take notes with
+***
+
+## Introduction to SQL Injection
 SQL Injection is one of the top attacks performed on web applications today. Though it has been around since the late 1990's and can easily be avoided, it still prevails. 
 
 An SQL Injection attack happens when the attacker enters malicious code or a query into an unvalidated form, such as username and password. Becasuse the form data is not validated, the SQL database can accept what is entered into the form as a command to be executed. 
@@ -15,33 +40,8 @@ The _OWASP Top Ten Website_ defines and describes SQL Injection as follows:
 
  This type of attack can reveal usernames and passwords, as well as allowing the attacker to login as admin or any other user.
 
-## Module Overview
-In this module you will learn what a SQL injection is, how to perform one and what the results can be. You'll also see how DataDog's agent can prevent and alert you of such an attack.
-
-This module is intended for an IT professional, with a curiosity about AppSec. Your role might be Developer, SRE, QA, or Engineer. 
-
-First, we will open Docker and install a common vulnerability website for us to hack called the OWASP Juice Shop. Next, we will perform an SQL injection on the OWASP Juice Shop using a well known tool called Burp Suite. Next, we will look at the results of our injection, the consequences. Finally, we'll build a Docker container with the OWASP Juice shop plus the DataDog agent installed to see how this tool can prevent and give visibility into the attack.
-
-For brevity this module does not include  installing or using Docker, the use of a Command Line Interface or give an overview of Burp Suite. Links to resources on Docker and Burp Suite are provided for your own learning outside the module. Docker is required to complete this module.
-
-## Assumptions
-The ideal learner is  familiar with the command line interface (CLI).  Docker basics are required to run the scenario.  If you do not have experience with Docker, here are a few links on installing Docker and a quick how-to on how to get Docker up and running.
-
-* [Get Docker](https://docs.Docker.com/get-Docker/)
-* [Getting started with Docker](https://docs.Docker.com/get-started/)
-
-## Required Tools
-1. Access to a Shell or Command Line Interface
-2. Firefox or web browser of choice
-3. Docker
-4. Burp Suite community edition
-5. OWASP JuiceShop Website (which we will retrieve in and install via Docker)
-6. Datadog account (sign up for a free trial  [here](https://www.datadoghq.com))
-7. Something to take notes with
-8. A curious mind!
-***
 ## Step 1:  Install and run the OWASP Juice Shop Image in Docker
-Open your shell or command line interface. From here we will use Docker to get the image for the OWASP  Juice Shop to load into our container.
+Open your shell or CLI. From here we will use Docker to get the image for the OWASP  Juice Shop to load into our container.
 
 
 
@@ -52,17 +52,20 @@ https://user-images.githubusercontent.com/15679125/175845793-35ef4c95-3ef5-4abf-
 
 
 
-From your command line, enter the following commands:
+From your CLI, enter the following commands:
 >`docker pull bkimminich/juice-shop`
+
 (this pulls the Docker image into our local environment)
 
->`docker run --rm -p 3000:3000 bkimminich/juice-shop` (BTW, that is an _r_ and _m_ after the two dashes. This actually runs the image)
+>`docker run --rm -p 3000:3000 bkimminich/juice-shop`
+
+(BTW, that is an _r_ and _m_ after the two dashes. This actually runs the image)
 
 Now that the OWASP Juice Shop is running, open up Firefox or your web browser of choice and enter the following URL to access the OWASP Juice Shop:
 
->http://localhost:3000 (on macOS and Windows browse to http://192.168.99.100:3000 if you are using Docker-machine instead of the native Docker installation)
+>`http://localhost:3000` (on macOS and Windows browse to `http://192.168.99.100:3000` if you are using Docker-machine instead of the native Docker installation)
 
-The OWASP Juice Shop is one of many applications made to practice hacking in a safe environment without offending anyone or breaking any laws. Feel free to poke around and look at the various aspects of this site.
+The OWASP Juice Shop is one of many applications made to practice web attacks in a safe environment without offending anyone or breaking any laws. Feel free to poke around and look at the various aspects of this site.
 
 ## Step 2: Install and run Burp Suite Community Edition
 
@@ -84,13 +87,15 @@ This module will only touch on basic usage of Burp Suite. If you'd like to learn
 
 We’ll be guiding you step by step on what to do in Burp Suite for this exercise, so don't worry.
 
-Once Burp Suite is downloaded and installed, go ahead and run the application. At first launch you will likely be prompted about the project. Leave *Temporary project* selected and hit **Next**.
-On the next screen leave *Use Burp defaults* and hit **Start Burp**.
+Once Burp Suite is downloaded and installed, go ahead and run the application. At first launch you will likely be prompted about the project. Leave **Temporary project** selected and hit **Next**.
+On the next screen leave **Use Burp defaults** and hit **Start Burp**.
 
 Once running it should look something like this:
 
 ![Burp Suite](/assets/images/burp-suite.png)
 >Note: For your convenience, a video located in assets/videos/Burp Suite.mp4, walking through the attack itself is provided in the GitHub folder. Feel free to have that open and running as you perform steps 3 and 4.
+
+It is also availble here:
 >
 https://user-images.githubusercontent.com/15679125/175849148-f5331727-52fa-474c-a5ea-59ba91c5a683.mp4
 
@@ -98,13 +103,13 @@ https://user-images.githubusercontent.com/15679125/175849148-f5331727-52fa-474c-
 
 ## Step 3: Perform SQL Injection attack on OWASP Juice Shop and Login as Admin
 
-Go ahead and close whatever browser you have the OWASP Juice Shop open.
+Go ahead and close whatever browser you have the OWASP Juice Shop open in.
 
 With Burp Suite open you’ll likely be on the Dashboard.
 
 Navigate to the Proxy tab and click on the Open Browser button. This will open Burp Suite’s own Chromium browser for us to access the OWASP Juice Shop. Enter the URL in for the OWASP Juice Shop in the browser:
 
->http://localhost:3000 (on macOS and Windows browse to http://192.168.99.100:3000 if you are using Docker-machine instead of the native Docker installation)
+>`http://localhost:3000` (on macOS and Windows browse to `http://192.168.99.100:3000` if you are using Docker-machine instead of the native Docker installation)
 
 It’s handy to have the browser window with the OWASP Juice Shop on one side of your screen and Burp Suite on the other side.
 
@@ -127,6 +132,7 @@ Change the “a” next to email with: `‘or 1=1--` and press the **Forward** b
 Notice the OWASP Juice Shop’s response
 
 >**Question 2:** What is the email address of the Admin account on the OWASP Juice Shop?
+
 >**Answer:** (answers at bottom of this document)
 
 **Congratulations!** You are now logged in as the Admin account on the OWASP Juice Shop!
@@ -153,7 +159,7 @@ Now press the **Login** button in the OWASP Juice Shop.
 
 Notice what happens in Burp Suite.
 
-This time change the email to: bender@juice-sh.op'-- and press the Forward button. Again, we only needed to intercept that one entry, go ahead and turn intercept off by clicking on the ***Intercept is on*** button.
+This time change the email to: `bender@juice-sh.op'--` and press the Forward button. Again, we only needed to intercept that one entry, go ahead and turn intercept off by clicking on the ***Intercept is on*** button.
 
 >****Question 3:** What is the last bit of code or text starting at line 20 in Burp Suite, now that we made our edit?
 
@@ -168,10 +174,10 @@ Congratulations! You are now logged in as the Bender account on the OWASP Juice 
 You might be wondering why we didn’t need to use 1=1 in this case? Since we knew the username already, we knew it would be true, so no need to create another true statement. All we needed to do was add the -- to comment out the rest of the login process.
 
 # BONUS Step - Use Datadog to Block and Monitor SQL Attacks
-In this step you'll build a custom Docker container with the OWASP Juice Shop that also the Datadog agent baked in and configured to monitor application security.
+In this step you'll build a custom Docker container with the OWASP Juice Shop that also has the Datadog agent baked in and configured to monitor application security.
 
-## Step 1. Pull Files 
-From the Github repository, pull down the follwing files:
+## Step 1. Clone Files 
+From the Github repository, clone the follwing files:
 1. Dockerfile.datadog
 2. docker-compose.datadog
 3. Secrets
@@ -190,11 +196,12 @@ Click the **Go To...** link on the left navigation bar and search for API.
 ![DD-API](/assets/images/SEARCH-API.png)
 
 Clicking on the API Keys (first in the search result) will take you right to that key in the Organizational Settings.
+
 ![DD-ORG](/assets/images/Organizational%20Setting.png)
 
 Clicking on the Key itself will bring up a window where you can easily copy the API Key. Copy this key now, then open the Secrets file provided and paste it next to the `DD_API_KEY=`
 
-Do the same for the APP Key only paste it's key next to 
+Do the same for the APP Key, only paste it's key next to 
 `DD_APP_KEY=`
 
 To get the RUM Application ID go to the **UX Monitoring** menu and select RUM Applications
@@ -231,7 +238,7 @@ From the CLI enter the following commands:
 
 Follow the instructions from Step 3, but this time browse to `http://loaclhost:8081`
 
-Notice this time the only response in the OWASP Juice Shop has to do with Error Handling. You are not logged in as admin.
+Notice this time the only response in the OWASP Juice Shop has to do with Error Handling. You are also not logged in as admin.
 
 # Step 5. See results in Datadog
 Now go to your Datadog portal. Browse to the **Security** menu and select **Application Security**
